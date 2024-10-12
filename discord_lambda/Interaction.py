@@ -84,7 +84,7 @@ class Channel:
         if response.status_code == 200:
             return Channel(response.json())
         else:
-            return None
+            return response
 
 class User:
     def __init__(self, data: dict) -> None:
