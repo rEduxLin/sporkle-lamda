@@ -14,6 +14,10 @@ def lock_command(inter: Interaction) -> None:
 
 
 def setup(registry: CommandRegistry) -> None:
-    registry.register_cmd(func=ping_command, name="ping", desc="I will pong your mom", options=[
+    registry.register_cmd(func=ping_command, name="ping", desc="I will pong your mom.", options=[
+        # CommandArg(name="input", desc="Add some input to the command!", type=CommandArg.Types.STRING)
+    ])
+
+    registry.register_cmd(func=lock_command, name="lock", desc="This thread will be locked for everyone, but you.", options=[
         # CommandArg(name="input", desc="Add some input to the command!", type=CommandArg.Types.STRING)
     ])
