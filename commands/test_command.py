@@ -1,6 +1,8 @@
 from discord_lambda import Interaction, Embedding, CommandArg, CommandRegistry, Channel
 import time
+import os
 
+BOT_TOKEN = os.environ.get['BOT_TOKEN']
 
 def ping_command(inter: Interaction) -> None:
     inter.send_response(content="pong your mom!")
@@ -11,7 +13,7 @@ def lock_command(inter: Interaction) -> None:
     perm_list = channel.permission_overwrite_list
 
 
-    inter.send_response(content=f"Thread locked, bye. \nAlso, take this:\n{channel.permission_overwrite_list}")
+    inter.send_response(content=f"Thread locked, bye. \nAlso, take this:\n{perm_list}")
 
 
 def setup(registry: CommandRegistry) -> None:
