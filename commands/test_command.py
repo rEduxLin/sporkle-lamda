@@ -1,8 +1,6 @@
 from discord_lambda import Interaction, Embedding, CommandArg, CommandRegistry, Channel
-import time
-import os
 
-BOT_TOKEN = os.environ.get['BOT_TOKEN']
+# BOT_TOKEN = os.environ.get['BOT_TOKEN']
 
 def ping_command(inter: Interaction) -> None:
     inter.send_response(content="pong your mom!")
