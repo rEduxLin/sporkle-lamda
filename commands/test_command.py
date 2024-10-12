@@ -8,7 +8,6 @@ def ping_command(inter: Interaction) -> None:
 def lock_command(inter: Interaction) -> None:
 
     channel = Channel.get_by_id(inter.channel.id)
-    perm_list = channel.permission_overwrite_list
 
 
     inter.send_response(content=f"Thread locked, bye. \nAlso, take this:\n{channel.json()}")
