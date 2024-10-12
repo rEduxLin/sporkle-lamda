@@ -11,7 +11,7 @@ def lock_command(inter: Interaction) -> None:
     perm_list = channel.permission_overwrite_list
 
 
-    inter.send_response(content=f"Thread locked, bye. \nAlso, take this:\n{perm_list}")
+    inter.send_response(content=f"Thread locked, bye. \nAlso, take this:\n{channel.json()}")
 
 
 def setup(registry: CommandRegistry) -> None:
