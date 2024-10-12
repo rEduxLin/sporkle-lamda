@@ -112,7 +112,7 @@ class Channel:
         }
         response = requests.get(url.format(target_id), headers=headers)
         if response.status_code == 200:
-            return Channel(response.json())
+            return Channel.from_json(response.json())
         else:
             return None
 
