@@ -75,8 +75,8 @@ class Channel:
         return response
     
     @staticmethod
-    def get_by_id(target_id: str):
-        url = f"https://discord.com/api/v10/channels/{0}"
+    def get_by_id(target_id: int):
+        url = "https://discord.com/api/v10/channels/{0}"
         headers = {
             "Authorization": f"Bot {os.environ.get('BOT_TOKEN')}"
         }
