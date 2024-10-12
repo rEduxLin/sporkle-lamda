@@ -9,8 +9,7 @@ def lock_command(inter: Interaction) -> None:
 
     channel = Channel.get_by_id(inter.channel.id)
 
-
-    inter.send_response(content=f"Thread locked, bye. \nAlso, take this:\n{channel.json()}")
+    inter.send_response(content=f"Thread locked, bye. \nAlso, take this:{inter.channel.__dict__}\n{channel.json()}")
 
 
 def setup(registry: CommandRegistry) -> None:
