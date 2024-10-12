@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+from .DiscordTypes import Permissions
 import requests
 import time
 import os
@@ -47,31 +49,59 @@ class Embedding:
     def set_footer(self, text: str, icon_url: str = None):
         self.footer = {"text": text, "icon_url": icon_url}
 
-
+@dataclass
 class PermissionOverwrite:
-    def __init__(self, data: dict) -> None:
-        self.id = data.get("id")
-        self.type = data.get("type")
-        self.allow = data.get("allow")
-        self.deny = data.get("deny")
+    id: str
+    type: int
+    allow: str
+    deny: str
 
-class Channel:
-    def __init__(self, data: dict) -> None:
-        self.id = data.get("id")
-        self.owner_id = data.get("owner_id")
-        self.permission_overwrite_list = [
-            PermissionOverwrite(permission_overwrite) for permission_overwrite in data.get("permission_overwrites", {})
-        ]
+    @staticmethod
+    def from_json(data: dict):
+        id = data.get("id")
+        type = data.get("type")
+        allow = data.get("allow")
+        deny = data.get("deny")
 
-        self.overwrite_url = f"https://discord.com/api/v10//channels/{0}/permissions/{1}"
-
+        return PermissionOverwrite(id, type, allow, deny)
+    
+    def is_allowed(self, permission: Permissions):
+        return hex(self.allow) & permission == permission
+    
+    def is_denied(self, permission: Permissions):
+        return hex(self.deny) & permission == permission
         
-    def __set_permissions_overwrite(self, overwrite: PermissionOverwrite):
-        response = {
-            "type": overwrite.id,
+
+@dataclass
+class Channel:
+    id: str
+    owner_id: str
+    permission_overwrite_list: list[PermissionOverwrite]
+
+    @staticmethod
+    def from_json(data: dict):
+        id = data.get("id")
+        owner_id = data.get("owner_id")
+        permission_overwrite_list = {
+            permission_overwrite.get("id"): PermissionOverwrite.from_json(permission_overwrite) for permission_overwrite in data.get("permission_overwrites", {})
+        }
+
+        return Channel(id, owner_id, permission_overwrite_list)
+        
+    def set_permissions_overwrite(self, overwrite: PermissionOverwrite):
+        url = "https://discord.com/api/v10//channels/{0}/permissions/{1}"
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bot {os.environ.get('BOT_TOKEN')}",
+        }
+        body = {
+            "type": overwrite.type,
             "allow": overwrite.allow,
             "deny": overwrite.deny,
         }
+
+        response = requests.put(url.format(self.id, overwrite.id), json=body, headers=headers)
+
         return response
     
     @staticmethod
@@ -84,7 +114,7 @@ class Channel:
         if response.status_code == 200:
             return Channel(response.json())
         else:
-            return response
+            return None
 
 class User:
     def __init__(self, data: dict) -> None:
