@@ -1,5 +1,6 @@
 import requests
 import time
+import os
 
 class Embedding:
     def __init__(self, title: str = "", desc: str = "", url: str = "", color: int = "", fields: list[dict] = [], footer: dict = {}):
@@ -54,7 +55,7 @@ class PermissionOverwrite:
         self.allow = data.get("allow")
         self.deny = data.get("deny")
 
-class Thread:
+class Channel:
     def __init__(self, data: dict) -> None:
         self.id = data.get("id")
         self.owner_id = data.get("owner_id")
@@ -72,6 +73,18 @@ class Thread:
             "deny": overwrite.deny,
         }
         return response
+    
+    @staticmethod
+    def get_by_id(target_id: int):
+        url = f"https://discord.com/api/v10/channels/{0}"
+        headers = {
+            "Authorization": f"Bot {os.environ["BOT_TOKEN"]}"
+        }
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            return Channel(response.json())
+        else:
+            return None
 
 class User:
     def __init__(self, data: dict) -> None:
@@ -91,8 +104,7 @@ class Interaction:
         self.data = interaction.get("data")
         self.timestamp = time.time()
         self.guild_id = interaction.get("guild_id")
-        self.channel = Thread(interaction.get("channel", {}))
-        self.channel_raw = interaction.get("channel")
+        self.channel = Channel(interaction.get("channel", {}))
         self.author_id = Member(interaction.get("member", {}))
 
         self.callback_url = f"https://discord.com/api/v10/interactions/{self.id}/{self.token}/callback"
