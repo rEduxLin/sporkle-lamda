@@ -78,7 +78,7 @@ class Channel:
     def get_by_id(target_id: int):
         url = f"https://discord.com/api/v10/channels/{0}"
         headers = {
-            "Authorization": f"Bot {os.environ["BOT_TOKEN"]}"
+            "Authorization": f"Bot {os.environ['BOT_TOKEN']}"
         }
         response = requests.get(url, headers=headers)
         if response.status_code == 200:
