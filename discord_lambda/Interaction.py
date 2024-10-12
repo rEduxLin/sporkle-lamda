@@ -76,12 +76,12 @@ class PermissionOverwrite:
 class Channel:
     id: str
     owner_id: str
-    permission_overwrite_list: list[PermissionOverwrite]
+    permission_overwrite_list: dict[str, PermissionOverwrite]
 
     @staticmethod
     def from_json(data: dict):
         id = data.get("id")
-        owner_id = data.get("owner_id")
+        owner_id = data.get("owner_id", 0)
         permission_overwrite_list = {
             permission_overwrite.get("id"): PermissionOverwrite.from_json(permission_overwrite) for permission_overwrite in data.get("permission_overwrites", {})
         }
