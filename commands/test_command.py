@@ -5,6 +5,12 @@ import time
 def ping_command(inter: Interaction) -> None:
     inter.send_response(content="pong your mom!")
 
+def lock_command(inter: Interaction) -> None:
+
+    perm_list = inter.channel.permission_overwrite_list
+
+
+    inter.send_response(content=f"Thread locked, bye. \nCheck out this shit: \n{perm_list}")
 
 
 def setup(registry: CommandRegistry) -> None:
