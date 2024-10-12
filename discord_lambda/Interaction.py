@@ -47,6 +47,40 @@ class Embedding:
         self.footer = {"text": text, "icon_url": icon_url}
 
 
+class PermissionOverwrite:
+    def __init__(self, data: dict) -> None:
+        self.id = data.get("id")
+        self.type = data.get("type")
+        self.allow = data.get("allow")
+        self.deny = data.get("deny")
+
+class Thread:
+    def __init__(self, data: dict) -> None:
+        self.id = data.get("id")
+        self.owner_id = data.get("owner_id")
+        self.permission_overwrite_list = [
+            PermissionOverwrite(permission_overwrite) for permission_overwrite in data.get("permission_overwrites", {})
+        ]
+
+        self.overwrite_url = f"https://discord.com/api/v10//channels/{0}/permissions/{1}"
+
+        
+    def __set_permissions_overwrite(self, overwrite: PermissionOverwrite):
+        response = {
+            "type": overwrite.id,
+            "allow": overwrite.allow,
+            "deny": overwrite.deny,
+        }
+        return response
+
+class User:
+    def __init__(self, data: dict) -> None:
+        self.id = data.get("id")
+
+class Member:
+    def __init__(self, data: dict) -> None:
+        self.user = User(data.get("user", {}))
+
 class Interaction:
     PING_RESPONSE = { "type": 1 }
 
@@ -55,9 +89,14 @@ class Interaction:
         self.token = interaction.get("token")
         self.id = interaction.get("id")
         self.data = interaction.get("data")
+        self.timestamp = time.time()
+        self.guild_id = interaction.get("guild_id")
+        self.channel = Thread(interaction.get("channel", {}))
+        self.author_id = Member(interaction.get("member", {}))
+
         self.callback_url = f"https://discord.com/api/v10/interactions/{self.id}/{self.token}/callback"
         self.webhook_url = f"https://discord.com/api/v10/webhooks/{app_id}/{self.token}/messages/@original"
-        self.timestamp = time.time()
+
     
 
     def __create_channel_message(self, content: str = None, embeds: list[Embedding] = None, ephemeral: bool = True) -> dict:
@@ -81,7 +120,7 @@ class Interaction:
             requests.patch(self.webhook_url, json=self.__create_channel_message(content, embeds, ephemeral)).raise_for_status()
         except Exception as e:
             raise Exception(f"Unable to send response: {e}")
-    
+
 
     def send_followup(self, content: str = None, embeds: list[Embedding] = None, ephemeral: bool = True) -> None:
         try:
