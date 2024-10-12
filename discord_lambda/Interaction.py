@@ -80,7 +80,7 @@ class Channel:
         headers = {
             "Authorization": f"Bot {os.environ.get('BOT_TOKEN')}"
         }
-        response = requests.get(url, headers=headers)
+        response = requests.get(url.format(target_id), headers=headers)
         if response.status_code == 200:
             return Channel(response.json())
         else:
