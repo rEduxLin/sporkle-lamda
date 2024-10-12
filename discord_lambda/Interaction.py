@@ -92,6 +92,7 @@ class Interaction:
         self.timestamp = time.time()
         self.guild_id = interaction.get("guild_id")
         self.channel = Thread(interaction.get("channel", {}))
+        self.channel_raw = interaction.get("channel")
         self.author_id = Member(interaction.get("member", {}))
 
         self.callback_url = f"https://discord.com/api/v10/interactions/{self.id}/{self.token}/callback"
