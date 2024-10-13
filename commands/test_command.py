@@ -10,7 +10,7 @@ def lock_command(inter: Interaction) -> None:
     if not channel.owner_id:
         return inter.send_response(content="There is nothing to lock, dummy...")
     if channel.owner_id != inter.author_id:
-        return inter.send_response(content="You can't do that...")
+        return inter.send_response(content=f"You can't do that... {channel.owner_id} != {inter.author_id}")
     
     allow_overwrite = PermissionOverwrite(channel.owner_id, 1, allow=DiscordTypes.Permissions.SEND_MESSAGES | DiscordTypes.Permissions.Mana, deny=0)
     channel.set_permissions_overwrite(allow_overwrite)
@@ -19,7 +19,6 @@ def lock_command(inter: Interaction) -> None:
     if response:
         return inter.send_response(content=response)
         
-
     inter.send_response(content="Thread locked, bye.")
 
 
