@@ -94,15 +94,31 @@ class Channel:
             "Content-Type": "application/json",
             "Authorization": f"Bot {os.environ.get('BOT_TOKEN')}",
         }
-        body = {
+        data = {
             "type": overwrite.type,
             "allow": overwrite.allow,
             "deny": overwrite.deny,
         }
 
-        response = requests.put(url.format(self.id, overwrite.id), json=body, headers=headers)
+        response = requests.put(url.format(self.id, overwrite.id), json=data, headers=headers)
 
         return response
+    
+    def lock_thread(self):
+        url = f"https://discord.com/api/v10/channels/{self.id}"
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bot {os.environ.get('BOT_TOKEN')}",
+        }
+        data = {
+            "locked": True,
+        }
+
+        response = requests.patch(url, headers=headers, json=data)
+        if response.status_code == 200:
+            return ""
+        else:
+            return f"Error {response.status_code}: {response.text}"
     
     @staticmethod
     def get_by_id(target_id: int):
