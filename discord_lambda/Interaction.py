@@ -151,7 +151,7 @@ class Interaction:
         self.timestamp = time.time()
         self.guild_id = interaction.get("guild_id")
         self.channel = Channel.from_json(interaction.get("channel", {}))
-        self.author_id = Member(interaction.get("member", {}))
+        self.author_id = interaction.get("member").get("user").get("id")
 
         self.callback_url = f"https://discord.com/api/v10/interactions/{self.id}/{self.token}/callback"
         self.webhook_url = f"https://discord.com/api/v10/webhooks/{app_id}/{self.token}/messages/@original"
