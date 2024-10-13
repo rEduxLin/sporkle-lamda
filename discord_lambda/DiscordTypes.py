@@ -1,6 +1,6 @@
-from enum import Enum
+from enum import IntFlag
 
-class Permissions(Enum):
+class Permissions(IntFlag):
     ADMINISTRATOR = 0x8
     MANAGE_CHANNELS = 0x10
     SEND_MESSAGES = 0x800
